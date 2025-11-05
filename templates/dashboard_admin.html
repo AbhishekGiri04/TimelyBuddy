@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - TimelyBuddy{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), url('https://media.istockphoto.com/id/1411005272/photo/3d-calendar-with-check-mark-in-date-and-bell-notification-meeting-reminder-planner-daily-work.jpg?s=612x612&w=0&k=20&c=ZjThoCG7_n-BP2kXWqjJpYAJ8tMk9oT6Yvytw9x9f8I=') no-repeat center center fixed !important;
+        background-size: cover !important;
+        min-height: 100vh;
+    }
+    .modern-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .modern-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    .stat-card {
+        background: linear-gradient(135deg, var(--bg-color), rgba(255,255,255,0.1));
+        border-radius: 15px;
+        padding: 25px;
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .stat-icon {
+        background: var(--icon-bg);
+        color: var(--icon-color);
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+    .stat-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--number-color);
+    }
+    .action-btn {
+        background: linear-gradient(45deg, var(--btn-start), var(--btn-end));
+        border: none;
+        border-radius: 15px;
+        padding: 15px 20px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        color: white;
+    }
+</style>
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card" style="background: white; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 10px;">
+            <div class="card-body p-4">
+                <h2 class="mb-1" style="color: #1e3a8a; font-weight: 700;">Admin Dashboard</h2>
+                <p class="mb-0" style="color: #6b7280;">Welcome back, {{ current_user.full_name }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5">
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(59, 130, 246, 0.2); --text-color: #1d4ed8; --number-color: #1d4ed8; --icon-bg: #1d4ed8; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-user-tie fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_teachers }}</div>
+                <p class="mb-0 fw-semibold">Teachers</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(34, 197, 94, 0.2); --text-color: #166534; --number-color: #166534; --icon-bg: #166534; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-graduation-cap fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_students }}</div>
+                <p class="mb-0 fw-semibold">Students</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(168, 85, 247, 0.2); --text-color: #6b21a8; --number-color: #6b21a8; --icon-bg: #6b21a8; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-school fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_classes }}</div>
+                <p class="mb-0 fw-semibold">Classes</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(245, 158, 11, 0.2); --text-color: #b45309; --number-color: #b45309; --icon-bg: #b45309; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-book-open fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_subjects }}</div>
+                <p class="mb-0 fw-semibold">Subjects</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(239, 68, 68, 0.2); --text-color: #b91c1c; --number-color: #b91c1c; --icon-bg: #b91c1c; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-clipboard-list fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.total_assignments }}</div>
+                <p class="mb-0 fw-semibold">Assignments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="modern-card p-4">
+            <h5 class="mb-4 fw-bold"><i class="fas fa-rocket me-2 text-primary"></i>Quick Actions</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('admin_panel') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #3b82f6; --btn-end: #1d4ed8;">
+                        <i class="fas fa-cogs me-2"></i>Manage System
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('generate_timetable') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #10b981; --btn-end: #059669;">
+                        <i class="fas fa-sync-alt me-2"></i>Generate Timetable
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('view_timetable') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #8b5cf6; --btn-end: #7c3aed;">
+                        <i class="fas fa-table me-2"></i>View Timetable
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button class="action-btn w-100" data-bs-toggle="modal" data-bs-target="#noticeModal" style="--btn-start: #f59e0b; --btn-end: #d97706;">
+                        <i class="fas fa-bullhorn me-2"></i>Create Notice
+                    </button>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('export_pdf') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #ef4444; --btn-end: #dc2626;">
+                        <i class="fas fa-file-pdf me-2"></i>Export PDF
+                    </a>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <a href="{{ url_for('export_excel') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #06b6d4; --btn-end: #0891b2;">
+                        <i class="fas fa-file-excel me-2"></i>Export Excel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="modern-card p-4 mb-5">
+            <h5 class="mb-4 fw-bold"><i class="fas fa-bell me-2 text-warning"></i>Recent Notices</h5>
+            {% if notifications %}
+                {% for notification in notifications %}
+                <div class="alert" style="background: linear-gradient(45deg, rgba(67, 233, 123, 0.1), rgba(56, 249, 215, 0.1)); border: 1px solid rgba(67, 233, 123, 0.3); border-radius: 15px;">
+                    <strong class="text-primary">{{ notification.title }}</strong><br>
+                    <small class="text-muted">{{ notification.message }}</small><br>
+                    <span class="badge" style="background: linear-gradient(45deg, #667eea, #764ba2);">{{ notification.target_role }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No notices published yet</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Create Notice Modal -->
+<div class="modal fade" id="noticeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Notice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('create_notice') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" name="message" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Target Audience</label>
+                        <select class="form-control" name="target_role" required>
+                            <option value="all">All Users</option>
+                            <option value="teacher">Teachers Only</option>
+                            <option value="student">Students Only</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Publish Notice</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,452 @@
+{% extends "base.html" %}
+
+{% block title %}Mark Attendance - TimelyBuddy{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), url('https://media.istockphoto.com/id/1478140122/photo/3d-calendar-and-alarm-clock-in-cartoon-style-the-concept-of-drawing-up-tasks-and-achieving.jpg?s=612x612&w=0&k=20&c=T-9_C2wufIS4XtH3qQfwoUlGYk008jo0Vj2lEwKkgDs=') no-repeat center center fixed !important;
+        background-size: cover !important;
+        min-height: 100vh;
+    }
+    .modern-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .student-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+        border-radius: 15px;
+        border: 1px solid rgba(0,0,0,0.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .btn-present { 
+        background: linear-gradient(45deg, #10b981, #059669); 
+        transition: all 0.3s ease;
+        opacity: 1;
+        cursor: pointer;
+    }
+    .btn-absent { 
+        background: linear-gradient(45deg, #ef4444, #dc2626); 
+        transition: all 0.3s ease;
+        opacity: 1;
+        cursor: pointer;
+    }
+    .btn-present.active, .btn-present:hover {
+        opacity: 1;
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    .btn-absent.active, .btn-absent:hover {
+        opacity: 1;
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+    .attendance-btn {
+        border: none;
+        font-weight: 600;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card" style="background: white; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 10px;">
+            <div class="card-body p-4">
+                <h2 class="mb-1" style="color: #1e3a8a; font-weight: 700;">
+                    <i class="fas fa-user-check me-2"></i>Mark Attendance
+                </h2>
+                <p class="mb-0" style="color: #6b7280;">Mark attendance for your students</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="modern-card p-4 mb-4">
+            <h5 class="mb-3 fw-bold"><i class="fas fa-filter me-2 text-primary"></i>Filters</h5>
+            <div class="mb-3">
+                <label for="subjectFilter" class="form-label fw-semibold">Subject</label>
+                <select class="form-select" id="subjectFilter" style="border-radius: 10px;">
+                    <option value="">All Subjects</option>
+                    {% for subject in subjects %}
+                    <option value="{{ subject.id }}" data-section="{{ subject.section }}" data-class-id="{{ subject.class_id }}">{{ subject.display_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="dateFilter" class="form-label fw-semibold">Date</label>
+                <input type="date" class="form-control" id="dateFilter" style="border-radius: 10px;">
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="modern-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0 fw-bold"><i class="fas fa-users me-2 text-success"></i>Students</h5>
+                <small class="text-muted" id="studentCount">{{ students|length }} students</small>
+            </div>
+            
+            {% if students %}
+                <div id="noSubjectMessage" class="text-center py-4" style="display: none;">
+                    <i class="fas fa-arrow-left fa-2x text-muted mb-3"></i>
+                    <h6 class="text-muted">Please select a subject to view students</h6>
+                </div>
+                <div class="row" id="studentsList">
+                    {% for student in students %}
+                    <div class="col-md-6 mb-3 student-item" data-class-id="{{ student.class_id }}" data-student-id="{{ student.id }}" data-debug="{{ student.full_name }}-{{ student.class_id }}">
+                        <div class="student-card p-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h6 class="mb-0 fw-bold" style="color: #1e3a8a;">{{ student.full_name }}</h6>
+                                <small class="text-muted">{{ student.class_name }}</small>
+                            </div>
+                            <form method="POST" action="{{ url_for('mark_attendance') }}" class="attendance-form">
+                                <input type="hidden" name="student_id" value="{{ student.id }}">
+                                <input type="hidden" name="subject_id" class="subject-input" value="">
+                                <input type="hidden" name="date" class="date-input" value="">
+                                
+                                <div class="btn-group w-100" role="group">
+                                    <button type="button" class="btn btn-present text-white attendance-btn" data-status="present">
+                                        <i class="fas fa-check me-1"></i>Present
+                                    </button>
+                                    <button type="button" class="btn btn-absent text-white attendance-btn" data-status="absent">
+                                        <i class="fas fa-times me-1"></i>Absent
+                                    </button>
+                                </div>
+                                <div class="mt-2 text-center">
+                                    <small class="text-muted status-display">Not marked</small>
+                                </div>
+                                <input type="hidden" name="status" class="status-input" value="">
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="text-center mt-4">
+                    <div class="btn-group mb-3" role="group">
+                        <button type="button" class="btn btn-success" id="markAllPresentBtn">
+                            <i class="fas fa-check-double me-2"></i>Mark All Present
+                        </button>
+                        <button type="button" class="btn btn-danger" id="markAllAbsentBtn">
+                            <i class="fas fa-times-circle me-2"></i>Mark All Absent
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary btn-lg" id="submitAllBtn">
+                            <i class="fas fa-save me-2"></i>Submit All Attendance
+                        </button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-4x text-muted mb-3"></i>
+                    <h5 class="text-muted">No students found</h5>
+                    <p class="text-muted">No students are assigned to your subjects</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 start-0 p-3" style="z-index: 9999;">
+    <div id="notificationToast" class="toast" role="alert">
+        <div class="toast-header">
+            <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="toastMessage"></div>
+    </div>
+</div>
+
+<script>
+// Universal Attendance System - Clean and Simple
+class AttendanceManager {
+    constructor() {
+        this.subjectFilter = document.getElementById('subjectFilter');
+        this.dateFilter = document.getElementById('dateFilter');
+        this.submitAllBtn = document.getElementById('submitAllBtn');
+        this.init();
+    }
+    
+    init() {
+        // Set today's date
+        this.dateFilter.value = new Date().toISOString().split('T')[0];
+        
+        // Event listeners
+        this.subjectFilter.addEventListener('change', () => this.handleSubjectChange());
+        this.dateFilter.addEventListener('change', () => this.loadAttendanceStatus());
+        this.submitAllBtn.addEventListener('click', () => this.submitAllAttendance());
+        
+        // Attendance button clicks
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('attendance-btn')) {
+                this.handleAttendanceClick(e.target);
+            }
+        });
+        
+        // Bulk actions
+        document.getElementById('markAllPresentBtn').addEventListener('click', () => this.markAllStudents('present'));
+        document.getElementById('markAllAbsentBtn').addEventListener('click', () => this.markAllStudents('absent'));
+        
+        // Initial load - show all students initially
+        this.showAllStudents();
+    }
+    
+    handleSubjectChange() {
+        const selectedSubject = this.subjectFilter.value;
+        
+        if (!selectedSubject) {
+            this.showAllStudents();
+            return;
+        }
+        
+        // Get the selected option and extract class_id
+        const selectedOption = this.subjectFilter.options[this.subjectFilter.selectedIndex];
+        const targetClassId = selectedOption.getAttribute('data-class-id');
+        
+        console.log('Selected:', selectedSubject, 'Class ID:', targetClassId);
+        this.filterStudentsByClass(targetClassId);
+        this.updateFormInputs();
+        this.loadAttendanceStatus();
+    }
+    
+    filterStudentsByClass(targetClassId) {
+        const studentItems = document.querySelectorAll('.student-item');
+        let visibleCount = 0;
+        
+        studentItems.forEach(item => {
+            const studentClassId = item.getAttribute('data-class-id');
+            const studentName = item.querySelector('h6').textContent;
+            
+            if (targetClassId && studentClassId === targetClassId) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('studentCount').textContent = `${visibleCount} students`;
+        this.resetAllAttendance();
+    }
+    
+    showAllStudents() {
+        const studentItems = document.querySelectorAll('.student-item');
+        studentItems.forEach(item => {
+            item.style.display = 'block';
+        });
+        document.getElementById('studentCount').textContent = `${studentItems.length} students`;
+        this.resetAllAttendance();
+    }
+    
+    hideAllStudents() {
+        document.querySelectorAll('.student-item').forEach(item => {
+            item.style.display = 'none';
+        });
+        document.getElementById('studentCount').textContent = '0 students';
+        this.resetAllAttendance();
+    }
+    
+    resetAllAttendance() {
+        document.querySelectorAll('.attendance-btn').forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.transform = 'scale(1)';
+            btn.style.boxShadow = 'none';
+        });
+        document.querySelectorAll('.status-input').forEach(input => input.value = '');
+        document.querySelectorAll('.status-display').forEach(display => {
+            display.textContent = 'Not marked';
+            display.className = 'text-muted status-display';
+        });
+    }
+    
+    updateFormInputs() {
+        const selectedSubject = this.subjectFilter.value;
+        const selectedDate = this.dateFilter.value;
+        
+        document.querySelectorAll('.attendance-form').forEach(form => {
+            form.querySelector('.subject-input').value = selectedSubject;
+            form.querySelector('.date-input').value = selectedDate;
+        });
+    }
+    
+    loadAttendanceStatus() {
+        const subjectId = this.subjectFilter.value;
+        const date = this.dateFilter.value;
+        
+        if (!subjectId) return;
+        
+        fetch('/get_attendance_status', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `subject_id=${subjectId}&date=${date}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                this.applyAttendanceStatus(data.attendance);
+            }
+        })
+        .catch(error => console.log('Error loading attendance:', error));
+    }
+    
+    applyAttendanceStatus(attendanceData) {
+        document.querySelectorAll('.student-item').forEach(item => {
+            const studentId = item.dataset.studentId;
+            const status = attendanceData[studentId];
+            
+            if (status) {
+                const btn = item.querySelector(`[data-status="${status}"]`);
+                if (btn) {
+                    this.setAttendanceButton(btn, status);
+                }
+            }
+        });
+    }
+    
+    handleAttendanceClick(btn) {
+        const form = btn.closest('.attendance-form');
+        const status = btn.dataset.status;
+        
+        // Allow marking attendance even without subject selected for testing
+        this.setAttendanceButton(btn, status);
+        
+        // Only save to backend if subject is selected
+        if (this.subjectFilter.value) {
+            this.markAttendanceInstantly(form);
+        } else {
+            this.showToast('Select a subject to save attendance', 'warning');
+        }
+    }
+    
+    setAttendanceButton(btn, status) {
+        const form = btn.closest('.attendance-form');
+        const buttons = form.querySelectorAll('.attendance-btn');
+        
+        // Reset all buttons in form
+        buttons.forEach(b => {
+            b.classList.remove('active');
+            b.style.transform = 'scale(1)';
+            b.style.boxShadow = 'none';
+        });
+        
+        // Highlight selected button
+        btn.classList.add('active');
+        btn.style.transform = 'scale(1.05)';
+        btn.style.boxShadow = status === 'present' ? 
+            '0 4px 15px rgba(16, 185, 129, 0.6)' : 
+            '0 4px 15px rgba(239, 68, 68, 0.6)';
+        
+        // Update form
+        form.querySelector('.status-input').value = status;
+        
+        const statusDisplay = form.querySelector('.status-display');
+        statusDisplay.textContent = status === 'present' ? 'Present ✓' : 'Absent ✗';
+        statusDisplay.className = `text-${status === 'present' ? 'success' : 'danger'} status-display fw-bold`;
+    }
+    
+    markAttendanceInstantly(form) {
+        const formData = new FormData(form);
+        
+        fetch('/mark_attendance', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                this.showToast(data.message || 'Error marking attendance', 'error');
+            }
+        })
+        .catch(error => {
+            console.log('Error:', error);
+        });
+    }
+    
+    markAllStudents(status) {
+        const visibleStudents = Array.from(document.querySelectorAll('.student-item'))
+            .filter(item => item.style.display !== 'none');
+        
+        if (visibleStudents.length === 0) {
+            this.showToast('Please select a subject first', 'warning');
+            return;
+        }
+        
+        visibleStudents.forEach(item => {
+            const btn = item.querySelector(`[data-status="${status}"]`);
+            if (btn) btn.click();
+        });
+        
+        this.showToast(`Marked ${visibleStudents.length} students as ${status}`, 'success');
+    }
+    
+    submitAllAttendance() {
+        const visibleForms = Array.from(document.querySelectorAll('.attendance-form'))
+            .filter(form => {
+                const item = form.closest('.student-item');
+                return item.style.display !== 'none' && form.querySelector('.status-input').value;
+            });
+        
+        if (visibleForms.length === 0) {
+            this.showToast('No attendance marked to submit', 'warning');
+            return;
+        }
+        
+        this.showToast(`All attendance already saved automatically!`, 'success');
+    }
+    
+    showToast(message, type = 'info') {
+        // Remove existing toast
+        const existing = document.querySelector('.custom-toast');
+        if (existing) existing.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = `custom-toast alert alert-${type === 'success' ? 'success' : type === 'warning' ? 'warning' : type === 'error' ? 'danger' : 'info'}`;
+        toast.style.cssText = `
+            position: fixed; top: 20px; right: 20px; z-index: 9999;
+            min-width: 300px; padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease-out;
+        `;
+        
+        const icon = {
+            success: 'check-circle',
+            warning: 'exclamation-triangle', 
+            error: 'times-circle',
+            info: 'info-circle'
+        }[type] || 'info-circle';
+        
+        toast.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="fas fa-${icon} me-2"></i>
+                <span>${message}</span>
+                <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+            </div>
+        `;
+        
+        // Add animation
+        if (!document.querySelector('#toast-style')) {
+            const style = document.createElement('style');
+            style.id = 'toast-style';
+            style.textContent = '@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }';
+            document.head.appendChild(style);
+        }
+        
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new AttendanceManager();
+});
+</script>
+{% endblock %}

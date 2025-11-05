@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Assignment Submissions - {{ assignment.title }}{% endblock %}
+
+{% block content %}
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+}
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ assignment.title }} - Submissions</h4>
+                    <p class="mb-0">Subject: {{ assignment.subject_name }} | Class: {{ assignment.class_name }}</p>
+                    <p class="mb-0">Due Date: {{ assignment.due_date }}</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>ID</th>
+                                    <th>Status</th>
+                                    <th>Submitted At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for submission in submissions %}
+                                <tr>
+                                    <td>{{ submission.full_name }}</td>
+                                    <td>{{ submission.student_id }}</td>
+                                    <td>
+                                        {% if submission.status == 'Submitted' %}
+                                            <span class="badge bg-success">{{ submission.status }}</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">{{ submission.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if submission.submitted_at %}
+                                            {{ submission.submitted_at }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if submission.file_path %}
+                                            <a href="{{ url_for('uploaded_file', filename=submission.file_path) }}" 
+                                               class="btn btn-sm btn-primary" target="_blank">
+                                                <i class="fas fa-eye me-1"></i>View Submission
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">No submission</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

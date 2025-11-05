@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - TimelyBuddy{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), url('https://static.vecteezy.com/system/resources/previews/021/756/697/non_2x/tiny-woman-cartoon-character-check-date-on-calendar-agenda-girl-use-pencil-make-note-plan-on-paper-memo-schedule-time-management-process-organization-concept-flat-illustration-vector.jpg') no-repeat center center fixed !important;
+        background-size: cover !important;
+        min-height: 100vh;
+    }
+    .modern-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .stat-card {
+        background: linear-gradient(135deg, var(--bg-color), rgba(255,255,255,0.1));
+        border-radius: 15px;
+        padding: 25px;
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--number-color);
+    }
+    .stat-icon {
+        background: var(--icon-bg);
+        color: var(--icon-color);
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .action-btn {
+        background: linear-gradient(45deg, var(--btn-start), var(--btn-end));
+        border: none;
+        border-radius: 15px;
+        padding: 15px 20px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    .action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        color: white;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="modern-card p-5">
+            <div class="text-center mb-4">
+                <div class="position-relative d-inline-block">
+                    <div class="profile-image mx-auto mb-3" style="width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4); border: 4px solid white;">
+                        {% if student and student.profile_photo %}
+                            <img src="{{ student.profile_photo }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        {% else %}
+                            <i class="fas fa-user-graduate fa-4x text-white"></i>
+                        {% endif %}
+                    </div>
+                    <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
+                    <button class="btn btn-sm btn-primary position-absolute" style="bottom: 10px; right: 10px; border-radius: 50%; width: 35px; height: 35px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);" onclick="document.getElementById('profilePhotoInput').click()">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <h2 class="mb-2" style="color: #1e3a8a; font-weight: 700; font-size: 2.2rem;">{{ current_user.full_name }}</h2>
+                <p class="mb-4" style="color: #6366f1; font-size: 1.2rem; font-weight: 500;">Student Dashboard</p>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="table-responsive">
+                        <table class="table table-borderless" style="background: rgba(255,255,255,0.8); border-radius: 15px; overflow: hidden;">
+                            <tbody>
+                                <tr style="border-bottom: 1px solid rgba(0,0,0,0.1);">
+                                    <td class="fw-bold py-3 px-4" style="color: #374151; width: 25%; background: rgba(59, 130, 246, 0.05);"><i class="fas fa-id-badge me-2 text-primary"></i>Student ID</td>
+                                    <td class="py-3 px-4" style="color: #1e3a8a; font-weight: 600; font-size: 1.1rem;">{{ student.student_id|default('N/A') }}</td>
+                                    <td class="fw-bold py-3 px-4" style="color: #374151; width: 25%; background: rgba(59, 130, 246, 0.05);"><i class="fas fa-calendar me-2 text-primary"></i>Year</td>
+                                    <td class="py-3 px-4" style="color: #1e3a8a; font-weight: 600; font-size: 1.1rem;">{{ student.year|default('N/A') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold py-3 px-4" style="color: #374151; background: rgba(59, 130, 246, 0.05);"><i class="fas fa-users me-2 text-primary"></i>Section</td>
+                                    <td class="py-3 px-4" style="color: #1e3a8a; font-weight: 600; font-size: 1.1rem;">{{ student.section|default('N/A') }}</td>
+                                    <td class="fw-bold py-3 px-4" style="color: #374151; background: rgba(59, 130, 246, 0.05);"><i class="fas fa-envelope me-2 text-primary"></i>Email</td>
+                                    <td class="py-3 px-4" style="color: #1e3a8a; font-weight: 600; font-size: 1.1rem;">{{ current_user.email }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3); border-radius: 20px; color: white;">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center">
+                    <div class="me-4">
+                        <div style="width: 60px; height: 60px; background: rgba(255,255,255,0.2); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-chart-line fa-2x text-white"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="mb-2" style="color: white; font-weight: 700; font-size: 1.8rem;">Academic Dashboard</h3>
+                        <p class="mb-0" style="color: rgba(255,255,255,0.9); font-size: 1.1rem;">Your academic journey and performance insights</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(34, 197, 94, 0.2); --text-color: #166534; --number-color: #166534; --icon-bg: #166534; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-book-open fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.my_subjects|default(0) }}</div>
+                <p class="mb-0 fw-semibold">My Subjects</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(239, 68, 68, 0.2); --text-color: #b91c1c; --number-color: #b91c1c; --icon-bg: #b91c1c; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-clipboard-list fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.assignments_pending|default(0) }}</div>
+                <p class="mb-0 fw-semibold">Pending Assignments</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="stat-card" style="--bg-color: rgba(168, 85, 247, 0.2); --text-color: #6b21a8; --number-color: #6b21a8; --icon-bg: #6b21a8; --icon-color: white;">
+            <div class="text-center">
+                <div class="stat-icon mx-auto">
+                    <i class="fas fa-chart-pie fa-lg"></i>
+                </div>
+                <div class="stat-number">{{ stats.attendance_percentage|default(0) }}%</div>
+                <p class="mb-0 fw-semibold">Attendance Rate</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="modern-card p-4">
+            <h5 class="mb-4 fw-bold"><i class="fas fa-rocket me-2 text-primary"></i>Quick Actions</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('view_timetable') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #3b82f6; --btn-end: #1d4ed8;">
+                        <i class="fas fa-calendar-week me-2"></i>My Timetable
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('student_attendance') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #10b981; --btn-end: #059669;">
+                        <i class="fas fa-chart-bar me-2"></i>View Attendance
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('student_assignments') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #f59e0b; --btn-end: #d97706;">
+                        <i class="fas fa-tasks me-2"></i>My Assignments
+                    </a>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <a href="{{ url_for('notifications') }}" class="action-btn w-100 text-decoration-none d-block text-center" style="--btn-start: #8b5cf6; --btn-end: #7c3aed;">
+                        <i class="fas fa-bell me-2"></i>View Notices
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="modern-card p-4 mb-5">
+            <h5 class="mb-4 fw-bold"><i class="fas fa-bell me-2 text-warning"></i>Recent Notices</h5>
+            {% if notifications %}
+                {% for notification in notifications %}
+                <div class="alert" style="background: linear-gradient(45deg, rgba(67, 233, 123, 0.1), rgba(56, 249, 215, 0.1)); border: 1px solid rgba(67, 233, 123, 0.3); border-radius: 15px;">
+                    <strong class="text-primary">{{ notification.title }}</strong><br>
+                    <small class="text-muted">{{ notification.message }}</small>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No new notices</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Performance Overview -->
+<div class="row mt-4 mb-5">
+    <div class="col-md-6">
+        <div class="modern-card p-4">
+            <h5 class="mb-4 fw-bold"><i class="fas fa-chart-pie me-2 text-success"></i>Attendance Overview</h5>
+            <div class="text-center">
+                <div class="position-relative d-inline-block mb-3">
+                    <div style="width: 120px; height: 120px; border-radius: 50%; background: conic-gradient(#10b981 0deg {{ (stats.attendance_percentage|default(0) * 3.6)|round }}deg, #e5e7eb {{ (stats.attendance_percentage|default(0) * 3.6)|round }}deg 360deg); display: flex; align-items: center; justify-content: center;">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.2rem; color: #10b981;">
+                            {{ stats.attendance_percentage|default(0) }}%
+                        </div>
+                    </div>
+                </div>
+                <p class="text-muted mb-0">Overall Attendance Rate</p>
+                <small class="text-muted">Keep up the good work!</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="modern-card p-4">
+            <h5 class="mb-4 fw-bold"><i class="fas fa-tasks me-2 text-primary"></i>Assignment Status</h5>
+            <div class="text-center">
+                {% if stats.assignments_pending|default(0) > 0 %}
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(45deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <i class="fas fa-exclamation-triangle fa-2x text-white"></i>
+                    </div>
+                    <h6 class="text-warning mb-2">{{ stats.assignments_pending|default(0) }} Pending</h6>
+                    <p class="text-muted mb-0">Complete your assignments on time</p>
+                {% else %}
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(45deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                        <i class="fas fa-check-circle fa-2x text-white"></i>
+                    </div>
+                    <h6 class="text-success mb-2">All Complete!</h6>
+                    <p class="text-muted mb-0">Excellent work on staying current</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('profilePhotoInput');
+    
+    if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Show preview immediately
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelector('.profile-image').innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                };
+                reader.readAsDataURL(file);
+                
+                // Upload to server
+                const formData = new FormData();
+                formData.append('profile_photo', file);
+                
+                fetch('/upload_profile_photo', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Profile photo saved successfully');
+                    } else {
+                        console.error('Failed to save profile photo:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading photo:', error);
+                });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
