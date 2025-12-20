@@ -597,8 +597,48 @@ def view_timetable():
 @app.route('/export/excel')
 @login_required
 def export_excel():
-    flash('Excel export temporarily disabled', 'info')
-    return redirect(url_for('view_timetable'))
+    import xlsxwriter
+    
+    conn = get_db_connection()
+    rows = conn.execute('''
+        SELECT c.name as class, s.name as subject, s.code, 
+               u.full_name as teacher, cr.name as classroom, t.timeslot
+        FROM timetable t
+        JOIN subjects s ON t.subject_id = s.id
+        JOIN teachers te ON t.teacher_id = te.id
+        JOIN users u ON te.user_id = u.id
+        JOIN classrooms cr ON t.classroom_id = cr.id
+        JOIN classes c ON t.class_id = c.id
+        ORDER BY c.name, t.timeslot
+    ''').fetchall()
+    
+    # Create exports directory if it doesn't exist
+    exports_dir = os.path.join(os.path.dirname(__file__), 'exports')
+    if not os.path.exists(exports_dir):
+        os.makedirs(exports_dir)
+    
+    # Create Excel file
+    file_path = os.path.join(exports_dir, 'timetable.xlsx')
+    workbook = xlsxwriter.Workbook(file_path)
+    worksheet = workbook.add_worksheet('Timetable')
+    
+    # Add headers
+    headers = ['Class', 'Subject', 'Code', 'Teacher', 'Classroom', 'Timeslot']
+    for col, header in enumerate(headers):
+        worksheet.write(0, col, header)
+    
+    # Add data
+    for row_num, row in enumerate(rows, 1):
+        worksheet.write(row_num, 0, row['class'])
+        worksheet.write(row_num, 1, row['subject'])
+        worksheet.write(row_num, 2, row['code'])
+        worksheet.write(row_num, 3, row['teacher'])
+        worksheet.write(row_num, 4, row['classroom'])
+        worksheet.write(row_num, 5, row['timeslot'])
+    
+    workbook.close()
+    conn.close()
+    return send_file(file_path, as_attachment=True)
 
 @app.route('/export/pdf')
 @login_required
