@@ -135,6 +135,11 @@ TimelyBuddy - Smart Academic ERP System/
 ├── 📄 app.py                      # 🚀 Main Flask application
 ├── 📄 init_db.py                  # 🏗️ Database initialization
 ├── 📄 requirements.txt            # 📦 Python dependencies
+├── 📄 gunicorn.conf.py            # ⚙️ Production server config
+├── 📄 render.yaml                 # 🌐 Render deployment config
+├── 📄 Procfile                    # 🚀 Process configuration
+├── 📄 build.sh                    # 🔨 Build script for deployment
+├── 📄 runtime.txt                 # 🐍 Python version specification
 ├── 📄 .gitignore                  # 🚫 Git ignore rules
 └── 📄 README.md                   # 📖 Project documentation
 
