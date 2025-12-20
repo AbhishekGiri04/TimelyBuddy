@@ -1,10 +1,10 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_file
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import sqlite3
 import hashlib
 import pandas as pd
 from fpdf import FPDF
-import os
 from datetime import datetime
 from functools import wraps
 import webbrowser
@@ -16,7 +16,7 @@ from scheduling.graph_coloring import generate_initial_schedule
 from scheduling.backtracking import resolve_conflicts
 
 app = Flask(__name__)
-app.secret_key = 'timelybuddy_secret_key_2024'
+app.secret_key = os.environ.get('SECRET_KEY', 'timelybuddy_secret_key_2024')
 DB_PATH = os.path.join(os.path.dirname(__file__), 'database', 'timelybuddy.db')
 
 # Flask-Login setup
@@ -1375,16 +1375,30 @@ def open_browser(port):
     webbrowser.open(f'http://localhost:{port}', new=0)
 
 if __name__ == '__main__':
+    # Create necessary directories
     exports_dir = os.path.join(os.path.dirname(__file__), 'exports')
     if not os.path.exists(exports_dir):
         os.makedirs(exports_dir)
     
-    # Find available port
-    port = find_free_port()
+    uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+    if not os.path.exists(uploads_dir):
+        os.makedirs(uploads_dir)
+        os.makedirs(os.path.join(uploads_dir, 'profiles'))
+        os.makedirs(os.path.join(uploads_dir, 'assignments'))
+        os.makedirs(os.path.join(uploads_dir, 'submissions'))
     
-    # Auto-open browser after a short delay (only once)
-    if not os.environ.get('WERKZEUG_RUN_MAIN'):
-        threading.Timer(1.5, lambda: open_browser(port)).start()
-    
-    print(f"Starting TimelyBuddy - Smart Academic ERP System on port {port}")
-    app.run(debug=True, port=port)
+    # Production vs Development
+    if os.environ.get('RENDER'):
+        # Production on Render
+        port = int(os.environ.get('PORT', 10000))
+        app.run(host='0.0.0.0', port=port, debug=False)
+    else:
+        # Development mode
+        port = find_free_port()
+        
+        # Auto-open browser after a short delay (only once)
+        if not os.environ.get('WERKZEUG_RUN_MAIN'):
+            threading.Timer(1.5, lambda: open_browser(port)).start()
+        
+        print(f"Starting TimelyBuddy - Smart Academic ERP System on port {port}")
+        app.run(debug=True, port=port)
