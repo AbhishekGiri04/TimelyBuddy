@@ -123,16 +123,16 @@ TimelyBuddy - Smart Academic ERP System/
 │   └── 📂 css/
 │       └── 📄 style.css            # 🎨 Custom styling
 ├── 📂 templates/                   # 📄 HTML templates
-│   ├── 📄 admin.html               # 👨💼 Admin management panel
+│   ├── 📄 admin.html               # 💼 Admin management panel
 │   ├── 📄 assignment_submissions.html # 📋 Submission tracking
-│   ├── 📄 assignments_student.html # 👨🎓 Student assignments
-│   ├── 📄 assignments_teacher.html # 👩🏫 Teacher assignments
+│   ├── 📄 assignments_student.html # 🎓 Student assignments
+│   ├── 📄 assignments_teacher.html # 🏫 Teacher assignments
 │   ├── 📄 attendance_student.html  # 📊 Student attendance
 │   ├── 📄 attendance_teacher.html  # ✅ Teacher attendance
 │   ├── 📄 base.html                # 🏗️ Base template layout
 │   ├── 📄 dashboard_admin.html     # 📊 Admin dashboard
-│   ├── 📄 dashboard_student.html   # 👨🎓 Student dashboard
-│   ├── 📄 dashboard_teacher.html   # 👩🏫 Teacher dashboard
+│   ├── 📄 dashboard_student.html   # 👨 Student dashboard
+│   ├── 📄 dashboard_teacher.html   # 👩 Teacher dashboard
 │   ├── 📄 login.html               # 🔑 Login page
 │   ├── 📄 notifications.html       # 🔔 Notifications
 │   ├── 📄 teacher_students.html    # 👥 Student management
@@ -162,9 +162,9 @@ TimelyBuddy - Smart Academic ERP System/
 | 📍 Page / Feature            | 📸 Screenshot                                              |
 |:----------------------------|:-----------------------------------------------------------|
 | 🔐 Login Page               | ![Login Page](docs/Login_Page.png)                       |
-| 👨💼 Admin Dashboard        | ![Admin Dashboard](docs/Admin_Page.png)                  |
-| 👩🏫 Teacher Dashboard      | ![Teacher Dashboard](docs/Teacher_Page.png)              |
-| 👨🎓 Student Dashboard      | ![Student Dashboard](docs/Student_Page.png)              |
+| 💼 Admin Dashboard        | ![Admin Dashboard](docs/Admin_Page.png)                  |
+| 🏫 Teacher Dashboard      | ![Teacher Dashboard](docs/Teacher_Page.png)              |
+| 🎓 Student Dashboard      | ![Student Dashboard](docs/Student_Page.png)              |
 
 <br>
 
@@ -172,23 +172,23 @@ TimelyBuddy - Smart Academic ERP System/
 
 ## 👥 User Roles & Permissions
 
-### 👨💼 Admin
+### 💼 Admin
 - 🏫 Manage teachers, classes, classrooms, and subjects
 - 📅 Generate and regenerate timetables
 - 📊 View system statistics and analytics
 - 📤 Export timetables in PDF/Excel formats
 - 📢 Send system-wide notifications
-- 👩🏫 Assign teachers to subjects and classes
+- 🏫 Assign teachers to subjects and classes
 
-### 👩🏫 Teacher
+### 🏫 Teacher
 - 📅 View personal timetable and assigned classes
 - 📝 Create and manage assignments
 - ✅ Mark student attendance
-- 👨🎓 Manage students in their classes
+- 🎓 Manage students in their classes
 - 📋 View assignment submissions
 - 🖼️ Upload profile photos
 
-### 👨🎓 Student
+### 🎓 Student
 - 📅 View class timetable and schedule
 - 📤 Submit assignments with photo/file uploads
 - 📊 View personal attendance records
@@ -236,7 +236,7 @@ TimelyBuddy - Smart Academic ERP System/
 
 ### 🔑 Default Login Credentials
 
-**👨💼 Admin Account:**
+**💼 Admin Account:**
 - Username: `admin`
 - Password: `admin123`
 
@@ -331,7 +331,7 @@ POST /mark_attendance  # Mark student attendance
 python app.py
 
 # 🌐 Access the application
-# 👨💼 Admin: http://localhost:5001 (admin/admin123)
+# 💼 Admin: http://localhost:5001 (admin/admin123)
 # 📝 Note: Create teachers and students through admin panel
 ```
 
