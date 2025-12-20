@@ -161,10 +161,10 @@ TimelyBuddy - Smart Academic ERP System/
 
 | 📍 Page / Feature            | 📸 Screenshot                                              |
 |:----------------------------|:-----------------------------------------------------------|
-| 🔐 Login Page               | ![Login Page](docs/Login_Page.png)                       |
-| 💼 Admin Dashboard        | ![Admin Dashboard](docs/Admin_Page.png)                  |
-| 🏫 Teacher Dashboard      | ![Teacher Dashboard](docs/Teacher_Page.png)              |
-| 🎓 Student Dashboard      | ![Student Dashboard](docs/Student_Page.png)              |
+| Login Page               | ![Login Page](docs/Login_Page.png)                       |
+| Admin Dashboard          | ![Admin Dashboard](docs/Admin_Page.png)                  |
+| Teacher Dashboard        | ![Teacher Dashboard](docs/Teacher_Page.png)              |
+| Student Dashboard        | ![Student Dashboard](docs/Student_Page.png)              |
 
 <br>
 
