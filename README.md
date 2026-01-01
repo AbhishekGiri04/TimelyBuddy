@@ -123,16 +123,16 @@ TimelyBuddy - Smart Academic ERP System/
 │   └── 📂 css/
 │       └── 📄 style.css            # 🎨 Custom styling
 ├── 📂 templates/                   # 📄 HTML templates
-│   ├── 📄 admin.html               # 💼 Admin management panel
+│   ├── 📄 admin.html               # 👨💼 Admin management panel
 │   ├── 📄 assignment_submissions.html # 📋 Submission tracking
-│   ├── 📄 assignments_student.html # 🎓 Student assignments
-│   ├── 📄 assignments_teacher.html # 🏫 Teacher assignments
+│   ├── 📄 assignments_student.html # 👨🎓 Student assignments
+│   ├── 📄 assignments_teacher.html # 👩🏫 Teacher assignments
 │   ├── 📄 attendance_student.html  # 📊 Student attendance
 │   ├── 📄 attendance_teacher.html  # ✅ Teacher attendance
 │   ├── 📄 base.html                # 🏗️ Base template layout
 │   ├── 📄 dashboard_admin.html     # 📊 Admin dashboard
-│   ├── 📄 dashboard_student.html   # 👨 Student dashboard
-│   ├── 📄 dashboard_teacher.html   # 👩 Teacher dashboard
+│   ├── 📄 dashboard_student.html   # 👨🎓 Student dashboard
+│   ├── 📄 dashboard_teacher.html   # 👩🏫 Teacher dashboard
 │   ├── 📄 login.html               # 🔑 Login page
 │   ├── 📄 notifications.html       # 🔔 Notifications
 │   ├── 📄 teacher_students.html    # 👥 Student management
@@ -149,6 +149,7 @@ TimelyBuddy - Smart Academic ERP System/
 ├── 📄 build.sh                     # 🔨 Build script for deployment
 ├── 📄 gunicorn.conf.py             # ⚙️ Production server config
 ├── 📄 init_db.py                   # 🗃️ Database initialization
+├── 📄 LICENSE                      # 📄 MIT License file
 ├── 📄 Procfile                     # 📋 Process configuration
 ├── 📄 README.md                    # 📖 Project documentation
 ├── 📄 render.yaml                  # 🌐 Render deployment config
@@ -402,8 +403,8 @@ python init_db.py
 
 ## 📞 Help & Contact  
 
-> 💬 *Got questions or need assistance with TimelyBuddy?*  
-> We're here to help with technical support and collaboration!
+> 💬 Got questions or need assistance with TimelyBuddy?  
+> We're here to help with integration and customization!
 
 <div align="center">
 
@@ -419,6 +420,12 @@ python init_db.py
 </a>
 
 <br/>
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
